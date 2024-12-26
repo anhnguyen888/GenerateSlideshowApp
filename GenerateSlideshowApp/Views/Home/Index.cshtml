@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Image Slideshow Generator";
+}
+
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4">Image Slideshow Generator</h1>
+        <p class="lead">Click the button below to generate a new slideshow application</p>
+
+        <button id="generateBtn" class="btn btn-primary btn-lg mt-4">
+            Generate Slideshow Application
+        </button>
+
+        <div id="result" class="mt-4" style="display: none;">
+            <p class="text-success">Slideshow generated successfully!</p>
+            <a id="slideshowLink" href="#" class="btn btn-success" target="_blank">
+                View Slideshow
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('generateBtn').addEventListener('click', async function() {
+            try {
+                const response = await fetch('/Home/GenerateSlideshow', {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const resultDiv = document.getElementById('result');
+                    const slideshowLink = document.getElementById('slideshowLink');
+
+                    slideshowLink.href = data.url;
+                    resultDiv.style.display = 'block';
+                } else {
+                    alert('Failed to generate slideshow: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while generating the slideshow');
+            }
+        });
+    </script>
+}
